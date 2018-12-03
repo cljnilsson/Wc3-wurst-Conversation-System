@@ -1,0 +1,34 @@
+package Hello
+
+import Dialogue
+import Talk
+
+Dialogue array dialogues
+
+function giveItem()
+	Dialogue d = getTriggeredDialogue()
+	player p   = getTriggeringOptionPlayer()
+	unit u     = d.getStarterUnit(p)
+
+	u.addItem('bgst')
+
+init
+    // Unit Preperation
+    unit questNPC = createUnit(players[0], 'hfoo', vec2(100, 100), angle(0))
+    ..setColor(PLAYER_COLOR_BLUE)
+
+    // Dialogue setup
+    dialogues[0] = new Dialogue(questNPC)
+    dialogues[1] = new Dialogue(questNPC)
+
+    dialogues[0].addOption("Hello, fellow soldier!").linkTextReply("Dues vult, brother. Here is a free item, check your inventory.", 4).callback(function giveItem)
+    dialogues[0].addOption("Chaosy is the best").linkTextReply("Nah.", 2)
+    dialogues[0].addOption("I have another question").linkDialogue(dialogues[1])
+    dialogues[0].addOption("Quit").makeQuit()
+
+    dialogues[1].addOption("Where am I?").linkTextReply("Life is full of mysteries.", 2)
+    dialogues[1].addOption("Help, this system does not work in my map").linkTextReply("Chances are that your editor does not support wurst.", 2)
+    dialogues[1].addOption("Back").linkDialogue(dialogues[0])
+
+    // Optional for demo
+	setupQuestGiver(dialogues[0])
